@@ -1,0 +1,23 @@
+{
+  "name": "homebridge-regza",
+  "version": "1.0.0",
+  "description": "Regza TV Control for Homebridge",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sylpied/homebridge-regza-master" 
+  },
+  "author": "Saki Sylpied",
+  "license": "MIT",
+  "engines": {
+    "homebridge": ">=0.2.0",
+    "node": ">=0.12.0"
+  },
+  "keywords": ["homebridge-plugin"],
+  "dependencies": {
+      "axios": "^0.18.0"
+  }
+}
