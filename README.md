@@ -1,4 +1,4 @@
-# homebridge-regza
+# homebridge-regza2
 
 ## Example configuration
 ```json
