@@ -19,5 +19,3 @@ npm i -g homebridge-regza3
 ## 🎫 Licence
 
 The MIT License (MIT)
-# homebridge-regza3
-# homebridge-regza3
