@@ -1,6 +1,3 @@
-const request = require("request-promise-native");
-
-const BASE_URL = "https://api.nature.global";
 const PLUGIN_NAME = 'homebridge-regza3';
 const PLATFORM_NAME = 'RegzaTVRemote';
 
