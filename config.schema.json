@@ -1,0 +1,178 @@
+{
+  "pluginAlias": "RegzaTVRemote",
+  "pluginType": "platform",
+  "singular": false,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "manufacturer": {
+        "title": "Manufacturer",
+        "type": "string",
+        "default": "TOSHIBA",
+        "description": "TV Manufacturer of REGZA TV. This value is used to TV Manufacturer.",
+        "required": true
+      },
+      "model": {
+        "title": "Model",
+        "type": "string",
+        "default": "65X930",
+        "description": "TV Model of REGZA TV. This value is used to TV Model.",
+        "required": true
+      },
+      "name": {
+        "title": "Name",
+        "type": "string",
+        "default": "Room TV",
+        "description": "TV name of REGZA TV. This value is used to identify REGZA TV.",
+        "required": true
+      },
+      "access_token": {
+        "title": "Access token",
+        "type": "string",
+        "required": true
+      },
+      "appliance_id": {
+        "title": "Appliance ID",
+        "type": "string",
+        "required": true
+      },
+      "host": {
+        "title": "TV Ethernet Address",
+        "type": "string",
+        "default": "0.0.0.0",
+        "description": "IP address of REGZA TV.  This value is the IP Address set in REGZA TV.",
+        "required": true
+      },
+      "user": {
+        "title": "TV Acces ID",
+        "type": "string",
+        "default": "admin",
+        "description": "User name of REGZA TV.  This value is the UserName set in REGZA TV.",
+        "required": true
+      },
+      "pass": {
+        "title": "TV Access Password",
+        "type": "string",
+        "default": "password",
+        "description": "Password of REGZA TV.  This value is the Password set in REGZA TV.",
+        "required": true
+      },
+      "sources": {
+        "type": "array",
+        "description": "Set the input source for the TV.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "title": "Label",
+              "type": "string",
+              "placeholder": "Enter source name (ex. 'HDMI1')",
+              "required": true
+            },
+            "button": {
+              "title": "Button Name",
+              "type": "string",
+              "placeholder": "Enter button name from nature remo",
+              "required": true
+            }
+          }
+        }
+      },
+      "allow_up": {
+        "title": "Allow up",
+        "type": "string",
+        "placeholder": "up"
+      },
+      "allow_down": {
+        "title": "Allow down",
+        "type": "string",
+        "placeholder": "down"
+      },
+      "allow_left": {
+        "title": "Allow left",
+        "type": "string",
+        "placeholder": "left"
+      },
+      "allow_right": {
+        "title": "Allow right",
+        "type": "string",
+        "placeholder": "right"
+      },
+      "select": {
+        "title": "Select button",
+        "type": "string",
+        "placeholder": "ok"
+      },
+      "back": {
+        "title": "Back button",
+        "type": "string",
+        "placeholder": "back"
+      },
+      "pause_resume": {
+        "title": "Pause/Resume",
+        "type": "string",
+        "placeholder": ""
+      },
+      "information": {
+        "title": "Information",
+        "type": "string",
+        "placeholder": "display"
+      }
+    }
+  },
+  "layout": [
+    {
+      "type": "fieldset",
+      "items": [
+        "manufacturer",
+        "model",
+        "name",
+        "access_token",
+        "appliance_id",
+        "host",
+        "user",
+        "pass"
+      ]
+    },
+    {
+      "key": "sources",
+      "type": "array",
+      "expandable": true,
+      "orderable": true,
+      "buttonText": "Add input source",
+      "items": [
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "items": [
+            "sources[].label",
+            "sources[].button"
+          ]
+        }
+      ]
+    },
+    {
+      "ref": "keymap",
+      "type": "fieldset",
+      "expandable": true,
+      "title": "Key maps",
+      "description": "Assign any button in REGZA TV to on the remote control.",
+      "items": [
+        {
+          "type": "flex",
+          "flex-flow": "row wrap",
+          "items": [
+            "allow_up",
+            "allow_down",
+            "allow_left",
+            "allow_right",
+            "select",
+            "back",
+            "pause_resume",
+            "information"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,23 +1,29 @@
 {
-  "name": "homebridge-regza2",
-  "version": "1.0.0",
-  "description": "Regza TV Control for Homebridge",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "name": "homebridge-regza3",
+  "version": "0.4.0",
+  "description": "This plugin add the REGZA TV control to homebridge",
+  "author": "saki.sylpied",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.7",
+    "axios": "^0.18.0"
   },
+  "keywords": [
+    "homebridge-plugin",
+    "REGZA",
+    "tv"
+  ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/sylpied/homebridge-regza2-master" 
+    "url": "git://github.com/sylpied/homebridge-regza3.git"
   },
-  "author": "Saki Sylpied",
-  "license": "MIT",
+  "homepage": "http://github.com/sylpied/homebridge-regza3",
+  "bugs": {
+    "url": "http://github.com/sylpied/homebridge-regza3/issues"
+  },
   "engines": {
-    "homebridge": ">=0.2.0",
-    "node": ">=0.12.0"
-  },
-  "keywords": ["homebridge-plugin"],
-  "dependencies": {
-      "axios": "^0.18.0"
+    "node": ">=10.16.0",
+    "homebridge": ">=0.4.50"
   }
 }

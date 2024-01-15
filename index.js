@@ -1,3 +1,9 @@
+const request = require("request-promise-native");
+
+const BASE_URL = "https://api.nature.global";
+const PLUGIN_NAME = 'homebridge-regza3';
+const PLATFORM_NAME = 'RegzaTVRemote';
+
 const crypto = require("crypto");
 const https = require("https");
 
@@ -5,82 +11,198 @@ const axios = require("axios");
 
 let Characteristic, Service;
 
-// https://github.com/KhaosT/HAP-NodeJS/blob/master/src/lib/gen/HomeKit-TV.ts
-
+//module.exports = (api) => {
+//  api.registerPlatform(PLATFORM_NAME, RegzaTVRemote);
+//}
 module.exports = (homebridge) => {
   Characteristic = homebridge.hap.Characteristic;
   Service = homebridge.hap.Service;
-  homebridge.registerAccessory("homebridge-regza2", "regza", RegzaAccessory);
+  homebridge.registerPlatform(PLATFORM_NAME, RegzaTVRemote);
 }
 
-class RegzaAccessory {
-  constructor(log, config) {
-    this._log = log;
-    this.name = config.name || "REGZA";
+class RegzaTVRemote {
+  constructor(log, config, homebridge) {
+    this.log = log;
+    this.config = config;
+    this.homebridge = homebridge;
+    this.name = config.name;
+    this.manufacturer = config.manufacturer;
+    this.model = config.model;
     this.host = config.host;
     this.user = config.user;
     this.pass = config.pass;
 
-/**
- * Service "Television"
- */
-    this._service = new Service.Television("REGZA");
-    this._service.setCharacteristic(Characteristic.ConfiguredName, this.name);
-    this._service.setCharacteristic(Characteristic.SleepDiscoveryMode, Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
-    // Required Characteristics
-    this._service.getCharacteristic(Characteristic.Active)
+    this.Characteristic = Characteristic;
+    this.Service = Service;
+
+    // get the name
+    const tvName = this.name;
+
+    // generate a UUID
+    const uuid = this.homebridge.hap.uuid.generate(`homebridge:${PLUGIN_NAME}` + tvName);
+
+    // create the accessory
+    this.tvAccessory = new homebridge.platformAccessory(tvName, uuid);
+
+    // set the accessory category
+    this.tvAccessory.category = this.homebridge.hap.Categories.TELEVISION;
+
+
+    /***********************************************************************************
+    *********************************   TV Service   ***********************************
+    /***********************************************************************************/
+
+    const tvService = this.tvAccessory.addService(this.Service.Television);
+
+    // set the tv name
+    tvService.setCharacteristic(this.Characteristic.ConfiguredName, tvName);
+
+    // set sleep discovery characteristic
+    tvService.setCharacteristic(this.Characteristic.SleepDiscoveryMode, this.Characteristic.SleepDiscoveryMode.ALWAYS_DISCOVERABLE);
+
+    // handle on / off events using the Active characteristic
+    tvService.getCharacteristic(this.Characteristic.Active)
       .on('get', this._getActive.bind(this))
       .on('set', this._setActive.bind(this));
-    this._service.getCharacteristic(Characteristic.ActiveIdentifier)
-      .on("set", this._setActiveIdentifier.bind(this));
-    this._service.getCharacteristic(Characteristic.ConfiguredName)
-      .on("set", this._setConfiguredName.bind(this));
-    this._service.getCharacteristic(Characteristic.RemoteKey)
-      .on("set", this._setRemoteKey.bind(this));
-    this._service.getCharacteristic(Characteristic.SleepDiscoveryMode)
-      .on("set", this._setSleepDiscoveryMode.bind(this));
 
-    // Optional Characteristics
-    this._service.getCharacteristic(Characteristic.Brightness);
-      .on("set", this._setBrightness.bind(this));
-    this._service.getCharacteristic(Characteristic.ClosedCaptions);
-      .on("set", this._setClosedCaptions.bind(this));
-    this._service.getCharacteristic(Characteristic.DisplayOrder);
-      .on("set", this._setDisplayOrder.bind(this));
-    this._service.getCharacteristic(Characteristic.CurrentMediaState);
-      .on("set", this._setCurrentMediaState.bind(this));
-    this._service.getCharacteristic(Characteristic.TargetMediaState);
-      .on("set", this._setTargetMediaState.bind(this));
-    this._service.getCharacteristic(Characteristic.Name);
-      .on("set", this._setName.bind(this));
-    this._service.getCharacteristic(Characteristic.PictureMode);
-      .on("set", this._setPictureMode.bind(this));
-    this._service.getCharacteristic(Characteristic.PowerModeSelection);
-      .on("set", this._setPowerModeSelection.bind(this));
+    tvService.setCharacteristic(this.Characteristic.ActiveIdentifier, 1);
 
-/**
- * Service "Television Speaker"
- */
-    this._speakerService = new Service.TelevisionSpeaker("REGZA Volume", "REGZA Speaker");
-    this._speakerService.setCharacteristic(Characteristic.Active, Characteristic.Active.ACTIVE);
-    this._speakerService.setCharacteristic(Characteristic.Volume, Characteristic.Volume.RELATIVE);
-    this._speakerService.setCharacteristic(Characteristic.VolumeControlType, Characteristic.VolumeControlType.RELATIVE);
-    // Not sure how to access this from iOS
-    this._speakerService.getCharacteristic(Characteristic.Mute)
-      .on('get', this._getMute.bind(this))
-      .on('set', this._setMute.bind(this));
-    this._speakerService.getCharacteristic(Characteristic.VolumeSelector)
-      .on('set', this._setVolume.bind(this));
-    this._service.addLinkedService(this._speakerService);
+    // handle input source changes
+    tvService.getCharacteristic(this.Characteristic.ActiveIdentifier)
+      .onSet((newValue) => {
+        const buttonName = this.config.sources[parseInt(newValue) - 1].button
+        this._sendKey(buttonName);
+        this.log.debug('> [Change Input Source]: ' + buttonName);
+      });
+
+    // handle remote control input
+    tvService.getCharacteristic(this.Characteristic.RemoteKey)
+      .onSet((newValue) => {
+        const { allow_up, allow_down, allow_left, allow_right, select, back, information, play_pause } = this.config
+        switch(newValue) {
+          case this.Characteristic.RemoteKey.REWIND: {
+            this._sendKey('40BE2C');
+            this.log.debug('> [Remote Key Pressed]: REWIND');
+            break;
+          }
+          case this.Characteristic.RemoteKey.FAST_FORWARD: {
+            this._sendKey('40BE23');
+            this.log.debug('> [Remote Key Pressed]: FAST_FORWARD');
+            break;
+          }
+          case this.Characteristic.RemoteKey.NEXT_TRACK: {
+            this._sendKey('40BE26');
+            this.log.debug('> [Remote Key Pressed]: NEXT_TRACK');
+            break;
+          }
+          case this.Characteristic.RemoteKey.PREVIOUS_TRACK: {
+            this._sendKey('40BE27');
+            this.log.debug('> [Remote Key Pressed]: PREVIOUS_TRACK');
+            break;
+          }
+          case this.Characteristic.RemoteKey.ARROW_UP: {
+            this._sendKey('40BF3E');
+            this.log.debug('> [Remote Key Pressed]: ARROW_UP');
+            break;
+          }
+          case this.Characteristic.RemoteKey.ARROW_DOWN: {
+            this._sendKey('40BF3F');
+            this.log.debug('> [Remote Key Pressed]: ARROW_DOWN');
+            break;
+          }
+          case this.Characteristic.RemoteKey.ARROW_LEFT: {
+            this._sendKey('40BF5F');
+            this.log.debug('> [Remote Key Pressed]: ARROW_LEFT');
+            break;
+          }
+          case this.Characteristic.RemoteKey.ARROW_RIGHT: {
+            this._sendKey('40BF5B');
+            this.log.debug('> [Remote Key Pressed]: ARROW_RIGHT');
+            break;
+          }
+          case this.Characteristic.RemoteKey.SELECT: {
+            this._sendKey('40BF3D');
+            this.log.debug('> [Remote Key Pressed]: SELECT');
+            break;
+          }
+          case this.Characteristic.RemoteKey.BACK: {
+            this._sendKey('40BF3B');
+            this.log.debug('> [Remote Key Pressed]: BACK');
+            break;
+          }
+          case this.Characteristic.RemoteKey.EXIT: {
+            this._sendKey('40BE93');
+            this.log.debug('[Remote Key Pressed]: EXIT');
+            break;
+          }
+          case this.Characteristic.RemoteKey.PLAY_PAUSE: {
+            this._sendKey('40BE2D');
+            this.log.debug('[Remote Key Pressed]: PLAY_PAUSE');
+            break;
+          }
+          case this.Characteristic.RemoteKey.INFORMATION: {
+            this._sendKey('40BF6E');
+            this.log.debug('[Remote Key Pressed]: INFORMATION');
+            break;
+          }
+        }
+      });
+
+    /**
+     * Create a speaker service to allow volume control
+     */
+
+    const speakerService = this.tvAccessory.addService(this.Service.TelevisionSpeaker);
+
+    speakerService
+      .setCharacteristic(this.Characteristic.Active, this.Characteristic.Active.ACTIVE)
+      .setCharacteristic(this.Characteristic.VolumeControlType, this.Characteristic.VolumeControlType.ABSOLUTE);
+
+    // handle volume control
+    speakerService.getCharacteristic(this.Characteristic.VolumeSelector)
+        .on('set', this._setVolume.bind(this));
+
+    /**
+     * Create TV Input Source Services
+     * These are the inputs the user can select from.
+     * When a user selected an input the corresponding Identifier Characteristic
+     * is sent to the TV Service ActiveIdentifier Characteristic handler.
+     */
+
+    if (this.config.sources && this.config.sources.length > 0) {
+      this.config.sources.map((src, index) => {
+        const inputService = this.tvAccessory.addService(this.Service.InputSource, src.label, src.label);
+        inputService
+          .setCharacteristic(this.Characteristic.Identifier, index + 1)
+          .setCharacteristic(this.Characteristic.ConfiguredName, src.label)
+          .setCharacteristic(this.Characteristic.IsConfigured, this.Characteristic.IsConfigured.CONFIGURED)
+          .setCharacteristic(this.Characteristic.InputSourceType, this.Characteristic.InputSourceType.HDMI);
+        tvService.addLinkedService(inputService); // link to tv service
+      })
+    }
+
+
+    /**
+     * Publish as external accessory
+     * Only one TV can exist per bridge, to bypass this limitation, you should
+     * publish your TV as an external accessory.
+     */
+    this.homebridge.publishExternalAccessories(PLUGIN_NAME, [this.tvAccessory]);
+
+    const informationService = new Service.AccessoryInformation();
   }
 
   getServices() {
-    const informationService = new Service.AccessoryInformation();
     informationService
-      .setCharacteristic(Characteristic.Manufacturer, "TOSHIBA")
-      .setCharacteristic(Characteristic.Model, "Z720X");
+      .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer)
+      .setCharacteristic(Characteristic.Model, this.config.model)
+      .setCharacteristic(Characteristic.SerialNumber, 'XXX-XXXX-XXXXX');
 
-    return [informationService, this._service, this._speakerService];
+    this.service.getCharacteristic(Characteristic.On)
+      .on('get', this.getOnCharacteristicHandler.bind(this))
+      .on('set', this.setOnCharacteristicHandler.bind(this));
+
+    return [informationService, tvService, speakerService];
   }
 
   async _getActive(callback) {
@@ -89,10 +211,10 @@ class RegzaAccessory {
 
   async _setActive(on, callback) {
     const desiredState = Boolean(on);
-    this._log("Setting switch to " + desiredState);
+    this.log.debug("Setting switch to " + desiredState);
     const currentState = await this._getPowerStatus();
     if (desiredState === currentState) {
-      this._log("Already in the desired state, skipping");
+      this.log.debug("Already in the desired state, skipping");
       callback();
       return;
     }
@@ -100,56 +222,50 @@ class RegzaAccessory {
     callback();
   }
 
-  async _setActiveIdentifier(id, callback) {
-    this._log("Set active ", id);
-    callback();
-    ///await this._sendKey('40BF10');
-  }
-
   async _getMute(callback) {
-    this._log("Disabling mute");
+    this.log.debug("Disabling mute");
     callback(null, true);
   }
 
   async _setMute(on, callback) {
-    this._log("Enabling mute");
+    this.log.debug("Enabling mute");
     const desiredState = Boolean(on);
     await this._sendKey('40BF10');
   }
 
   async _setVolume(down, callback) {
-    this._log(`Setting volume: ${down ? 'down' : 'up'}`);
+    this.log.debug(`Setting volume: ${down ? 'down' : 'up'}`);
     await this._sendKey(down ? '40BF1E' : '40BF1A');
     callback();
   }
 
   async _setRemoteKey(key, callback) {
     const map = {
-      [Characteristic.RemoteKey.REWIND]: '',
-      [Characteristic.RemoteKey.FAST_FORWARD]: '',
-      [Characteristic.RemoteKey.NEXT_TRACK]: '',
-      [Characteristic.RemoteKey.PREVIOUS_TRACK]: '',
+      [Characteristic.RemoteKey.REWIND]: '40BE2C',
+      [Characteristic.RemoteKey.FAST_FORWARD]: '40BE23',
+      [Characteristic.RemoteKey.NEXT_TRACK]: '40BE26',
+      [Characteristic.RemoteKey.PREVIOUS_TRACK]: '40BE27',
       [Characteristic.RemoteKey.ARROW_UP]: '40BF3E',
       [Characteristic.RemoteKey.ARROW_DOWN]: '40BF3F',
       [Characteristic.RemoteKey.ARROW_LEFT]: '40BF5F',
       [Characteristic.RemoteKey.ARROW_RIGHT]: '40BF5B',
       [Characteristic.RemoteKey.SELECT]: '40BF3D',
       [Characteristic.RemoteKey.BACK]: '40BF3B',
-      [Characteristic.RemoteKey.EXIT]: '',
+      [Characteristic.RemoteKey.EXIT]: '40BE93',
       [Characteristic.RemoteKey.PLAY_PAUSE]: '40BE2D',
-      [Characteristic.RemoteKey.INFORMATION]: '',
+      [Characteristic.RemoteKey.INFORMATION]: '40BF6E',
     }
     const keyCode = map[key];
     if (keyCode) {
       await this._sendKey(keyCode);
     } else {
-      this._log("Cannot send unsupported key: " + key);
+      this.log.debug("Cannot send unsupported key: " + key);
     }
     callback();
   }
 
   // async _getFeature() {
-  //   this._log("Getting feature");
+  //   this.log.debug("Getting feature");
   //   const res = await axios({
   //     url: `http://${this.host}/public/feature`,
   //   });
@@ -157,7 +273,7 @@ class RegzaAccessory {
   // }
 
   async _getPowerStatus() {
-    this._log(`Getting power status`);
+    this.log.debug(`Getting power status`);
     const res = await this._sendRequest(`https://${this.host}:4430`, "/v2/remote/play/status");
     const contentType = res.data.content_type;
     if (!contentType) return false;
@@ -165,7 +281,7 @@ class RegzaAccessory {
   }
 
   async _getMuteStatus() {
-    this._log("Getting mute status");
+    this.log.debug("Getting mute status");
     const res = await this._sendRequest(`https://${this.host}:4430`, "/v2/remote/status/mute");
     const { status, mute } = res.data;
     return status === 0 && mute === "on";
