@@ -9,7 +9,11 @@
 ## 📲 インストール
 まず、TV側のセットアップをします。TVのIP Addressを固定化します。方法は直接指定するか、DHCPサーバー側で固定割り当てにするかなどがあります。
 REGZA App Conectでユーザー名とパスワードを設定します。
-
+<p align="center">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin01.png" width="300">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin02.png" width="300">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin03.png" width="300">
+</p>
 これらで設定した値をPluginの設定画面で設定します。
 SourceのButton nameとKey mapは、HEXのコードを機能に応じて割り当てます。
 HEXのコードは、images folderの中に一覧表があります。
