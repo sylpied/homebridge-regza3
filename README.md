@@ -11,6 +11,9 @@
 ## 📲 Installation
 First, set up the TV side. Fix the IP address of the TV. There are two ways to do this: specify it directly, or make it a fixed assignment on the DHCP server side.
 Set your username and password on REGZA App Connect.
+
+Other settings such as wol settings and basic authentication are also required.
+Please look it up on the internet.
 <p align="center">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin01.png" height="100">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin02.png" height="100">

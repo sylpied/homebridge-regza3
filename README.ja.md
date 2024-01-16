@@ -9,6 +9,9 @@
 ## 📲 インストール
 まず、TV側のセットアップをします。TVのIP Addressを固定化します。方法は直接指定するか、DHCPサーバー側で固定割り当てにするかなどがあります。
 REGZA App Conectでユーザー名とパスワードを設定します。
+
+その他にwolの設定やbasic認証などの設定も必要です。
+ネットで調べてみてください。
 <p align="center">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin01.png" height="100">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin02.png" height="100">
