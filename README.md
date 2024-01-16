@@ -11,7 +11,11 @@
 ## 📲 Installation
 First, set up the TV side. Fix the IP address of the TV. There are two ways to do this: specify it directly, or make it a fixed assignment on the DHCP server side.
 Set your username and password on REGZA App Connect.
-
+<p align="center">
+<img src="https://github.com/sylpied/homebridge-regza3/images/HomebridgeREGZAplugin01.png" width="150">
+<img src="https://github.com/sylpied/homebridge-regza3/images/HomebridgeREGZAplugin02.png" width="150">
+<img src="https://github.com/sylpied/homebridge-regza3/images/HomebridgeREGZAplugin03.png" width="150">
+</p>
 Set these values ​​on the Plugin settings screen.
 Assign the HEX code to the Button name and Key map of Source according to the function.
 There is a list of HEX codes in the images folder.
