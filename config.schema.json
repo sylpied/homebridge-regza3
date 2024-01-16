@@ -26,16 +26,6 @@
         "description": "TV name of REGZA TV. This value is used to identify REGZA TV.",
         "required": true
       },
-      "access_token": {
-        "title": "Access token",
-        "type": "string",
-        "required": true
-      },
-      "appliance_id": {
-        "title": "Appliance ID",
-        "type": "string",
-        "required": true
-      },
       "host": {
         "title": "TV Ethernet Address",
         "type": "string",
@@ -135,8 +125,6 @@
         "manufacturer",
         "model",
         "name",
-        "access_token",
-        "appliance_id",
         "host",
         "user",
         "pass"
