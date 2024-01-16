@@ -1,12 +1,10 @@
 {
   "name": "homebridge-regza3",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "This plugin add the REGZA TV control to homebridge",
   "author": "saki.sylpied",
   "license": "MIT",
   "dependencies": {
-    "request": "^2.88.0",
-    "request-promise-native": "^1.0.7",
     "axios": "^0.18.0"
   },
   "keywords": [

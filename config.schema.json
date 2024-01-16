@@ -81,42 +81,50 @@
       "allow_up": {
         "title": "Allow up",
         "type": "string",
-        "placeholder": "up"
+        "default": "40BF3E",
+        "placeholder": "up button"
       },
       "allow_down": {
         "title": "Allow down",
         "type": "string",
-        "placeholder": "down"
+        "default": "40BF3F",
+        "placeholder": "down button"
       },
       "allow_left": {
         "title": "Allow left",
         "type": "string",
-        "placeholder": "left"
+        "default": "40BF5F",
+        "placeholder": "left button"
       },
       "allow_right": {
         "title": "Allow right",
         "type": "string",
-        "placeholder": "right"
+        "default": "40BF5B",
+        "placeholder": "right button"
       },
       "select": {
         "title": "Select button",
         "type": "string",
-        "placeholder": "ok"
+        "default": "40BF3D",
+        "placeholder": "ok button"
       },
       "back": {
         "title": "Back button",
         "type": "string",
-        "placeholder": "back"
+        "default": "40BF3B",
+        "placeholder": "back button"
       },
       "pause_resume": {
         "title": "Pause/Resume",
         "type": "string",
-        "placeholder": ""
+        "default": "40BE2D",
+        "placeholder": "Pause/Resume button"
       },
       "information": {
         "title": "Information",
         "type": "string",
-        "placeholder": "display"
+        "default": "40BF6E",
+        "placeholder": "Information button"
       }
     }
   },

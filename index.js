@@ -98,48 +98,48 @@ class RegzaTVRemote {
             break;
           }
           case this.Characteristic.RemoteKey.ARROW_UP: {
-            this._sendKey('40BF3E');
-            this.log.debug('> [Remote Key Pressed]: ARROW_UP');
+            this._sendKey(this.config.allow_up);
+            this.log.debug('> [Remote Key Pressed]: ARROW_UP ' + this.config.allow_up);
             break;
           }
           case this.Characteristic.RemoteKey.ARROW_DOWN: {
-            this._sendKey('40BF3F');
-            this.log.debug('> [Remote Key Pressed]: ARROW_DOWN');
+            this._sendKey(this.config.allow_down);
+            this.log.debug('> [Remote Key Pressed]: ARROW_DOWN ' + this.config.allow_down);
             break;
           }
           case this.Characteristic.RemoteKey.ARROW_LEFT: {
-            this._sendKey('40BF5F');
-            this.log.debug('> [Remote Key Pressed]: ARROW_LEFT');
+            this._sendKey(this.config.allow_left);
+            this.log.debug('> [Remote Key Pressed]: ARROW_LEFT ' + this.config.allow_left);
             break;
           }
           case this.Characteristic.RemoteKey.ARROW_RIGHT: {
-            this._sendKey('40BF5B');
-            this.log.debug('> [Remote Key Pressed]: ARROW_RIGHT');
+            this._sendKey(this.config.allow_right);
+            this.log.debug('> [Remote Key Pressed]: ARROW_RIGHT ' + this.config.allow_right);
             break;
           }
           case this.Characteristic.RemoteKey.SELECT: {
-            this._sendKey('40BF3D');
-            this.log.debug('> [Remote Key Pressed]: SELECT');
+            this._sendKey(this.config.select);
+            this.log.debug('> [Remote Key Pressed]: SELECT ' + this.config.select);
             break;
           }
           case this.Characteristic.RemoteKey.BACK: {
-            this._sendKey('40BF3B');
-            this.log.debug('> [Remote Key Pressed]: BACK');
+            this._sendKey(this.config.back);
+            this.log.debug('> [Remote Key Pressed]: BACK ' + this.config.back);
             break;
           }
           case this.Characteristic.RemoteKey.EXIT: {
             this._sendKey('40BE93');
-            this.log.debug('[Remote Key Pressed]: EXIT');
+            this.log.debug('> [Remote Key Pressed]: EXIT');
             break;
           }
           case this.Characteristic.RemoteKey.PLAY_PAUSE: {
-            this._sendKey('40BE2D');
-            this.log.debug('[Remote Key Pressed]: PLAY_PAUSE');
+            this._sendKey(this.config.play_pause);
+            this.log.debug('> [Remote Key Pressed]: PLAY_PAUSE ' + this.config.play_pause);
             break;
           }
           case this.Characteristic.RemoteKey.INFORMATION: {
-            this._sendKey('40BF6E');
-            this.log.debug('[Remote Key Pressed]: INFORMATION');
+            this._sendKey(this.config.information);
+            this.log.debug('> [Remote Key Pressed]: INFORMATION ' + this.config.information)
             break;
           }
         }
