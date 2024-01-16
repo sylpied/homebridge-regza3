@@ -14,7 +14,7 @@ Set your username and password on REGZA App Connect.
 <p align="center">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin01.png" width="300">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin02.png" width="300">
-<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin03.png" width="150">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin03.png" width="300">
 </p>
 Set these values ​​on the Plugin settings screen.
 Assign the HEX code to the Button name and Key map of Source according to the function.
