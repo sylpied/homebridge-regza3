@@ -19,7 +19,9 @@ Set your username and password on REGZA App Connect.
 Set these values ​​on the Plugin settings screen.
 Assign the HEX code to the Button name and Key map of Source according to the function.
 There is a list of HEX codes in the images folder.
-
+<p align="center">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/regza_remote_table.png" width="600">
+</p>
 Go to the "Plugins" tab in [config-ui-x](https://github.com/oznu/homebridge-config-ui-x) and search for `hhomebridge-regza3`, or use the following command to install it.
 
 ```sh
