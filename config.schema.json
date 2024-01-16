@@ -114,11 +114,11 @@
         "default": "40BF3B",
         "placeholder": "back button"
       },
-      "pause_resume": {
-        "title": "Pause/Resume",
+      "play_pause": {
+        "title": "PLAY_PAUSE",
         "type": "string",
         "default": "40BE2D",
-        "placeholder": "Pause/Resume button"
+        "placeholder": "Play Pause button"
       },
       "information": {
         "title": "Information",
@@ -176,7 +176,7 @@
             "allow_right",
             "select",
             "back",
-            "pause_resume",
+            "play_pause",
             "information"
           ]
         }
