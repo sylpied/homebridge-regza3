@@ -12,8 +12,8 @@
 First, set up the TV side. Fix the IP address of the TV. There are two ways to do this: specify it directly, or make it a fixed assignment on the DHCP server side.
 Set your username and password on REGZA App Connect.
 <p align="center">
-<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin01.png" width="150">
-<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin02.png" width="150">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin01.png" width="300">
+<img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin02.png" width="300">
 <img src="https://raw.githubusercontent.com/sylpied/homebridge-regza3/main/images/HomebridgeREGZAplugin03.png" width="150">
 </p>
 Set these values ​​on the Plugin settings screen.
