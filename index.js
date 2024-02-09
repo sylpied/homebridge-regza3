@@ -44,7 +44,6 @@ class RegzaTVRemote {
     // set the accessory category
     this.tvAccessory.category = this.homebridge.hap.Categories.TELEVISION;
 
-
     /***********************************************************************************
     *********************************   TV Service   ***********************************
     /***********************************************************************************/
@@ -159,6 +158,11 @@ class RegzaTVRemote {
     speakerService.getCharacteristic(this.Characteristic.VolumeSelector)
         .on('set', this._setVolume.bind(this));
 
+    // create handlers for required characteristics
+    speakerService.getCharacteristic(this.Characteristic.Mute)
+        .onGet(this.handleMuteGet.bind(this))
+        .onSet(this.handleMuteSet.bind(this));
+
     /**
      * Create TV Input Source Services
      * These are the inputs the user can select from.
@@ -190,6 +194,7 @@ class RegzaTVRemote {
   }
 
   getServices() {
+    this.log.debug("Setting manufacturer to " + this.config.manufacturer);
     informationService
       .setCharacteristic(Characteristic.Manufacturer, this.config.manufacturer)
       .setCharacteristic(Characteristic.Model, this.config.model)
@@ -200,6 +205,26 @@ class RegzaTVRemote {
       .on('set', this.setOnCharacteristicHandler.bind(this));
 
     return [informationService, tvService, speakerService];
+  }
+
+
+  /**
+   * Handle requests to get the current value of the "Mute" characteristic
+   */
+  handleMuteGet() {
+    this.log.debug("Triggered GET Mute");
+
+    // set this to a valid value for Mute
+    const currentValue = 1;
+
+    return currentValue;
+  }
+
+  /**
+   * Handle requests to set the "Mute" characteristic
+   */
+  handleMuteSet(value) {
+    this.log.debug("Triggered SET Mute:" + value);
   }
 
   async _getActive(callback) {
@@ -275,6 +300,15 @@ class RegzaTVRemote {
     const contentType = res.data.content_type;
     if (!contentType) return false;
     return contentType !== "other";
+  }
+
+  async _getChannelName() {
+    this.log.debug(`Getting power status`);
+    const res = await this._sendRequest(`https://${this.host}:4430`, "/v2/remote/play/status");
+    const channelName = res.data.epg_info_current.channel_name;
+    if (!res.data.content_type) return false;
+    this.log.debug("Getting channel name : " + channelName);
+    return channelName;
   }
 
   async _getMuteStatus() {
